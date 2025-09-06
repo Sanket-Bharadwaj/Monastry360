@@ -1,0 +1,105 @@
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, MapPin, Calendar, MessageSquare, Info, Home, Building2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+const navigation = [
+  { name: 'Home', href: '/', icon: Home },
+  { name: 'Map', href: '/map', icon: MapPin },
+  { name: 'Monasteries', href: '/monasteries', icon: Building2 },
+  { name: 'Calendar', href: '/calendar', icon: Calendar },
+  { name: 'Chat', href: '/chat', icon: MessageSquare },
+  { name: 'About', href: '/about', icon: Info },
+];
+
+export function Navigation() {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      {/* Prayer flag strip */}
+      <div className="prayer-flag-strip h-1" />
+      
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex flex-col">
+            <h1 className="text-xl font-bold text-primary font-serif">Monastery360</h1>
+            <p className="text-xs text-muted-foreground">Crafted by Team Horizon</p>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary",
+                    isActive ? "text-primary" : "text-muted-foreground"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{item.name}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Language Switcher - Future */}
+          <div className="hidden md:flex items-center space-x-2">
+            <Button variant="outline" size="sm" className="text-xs">
+              EN
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden py-4 border-t border-border">
+            <nav className="flex flex-col space-y-4">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={cn(
+                      "flex items-center space-x-3 px-2 py-1 text-sm font-medium transition-colors hover:text-primary",
+                      isActive ? "text-primary" : "text-muted-foreground"
+                    )}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+              <div className="pt-2 border-t border-border">
+                <Button variant="outline" size="sm" className="text-xs">
+                  EN • ལེ་ཝི • नेपाली • हिन्दी
+                </Button>
+              </div>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}

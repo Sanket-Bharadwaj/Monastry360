@@ -1,0 +1,363 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Monastery360 Design System - Sikkim Buddhist Cultural Theme */
+
+@layer base {
+  :root {
+    /* Parchment base */
+    --background: 40 20% 96%;
+    --foreground: 25 15% 15%;
+
+    /* Cards on warm parchment */
+    --card: 38 25% 94%;
+    --card-foreground: 25 20% 20%;
+
+    --popover: 38 25% 94%;
+    --popover-foreground: 25 20% 20%;
+
+    /* Earth brown primary (grounded, monastery stone) */
+    --primary: 25 35% 25%;
+    --primary-foreground: 40 20% 96%;
+
+    /* Muted blue-grey (rain clouds) */
+    --secondary: 210 15% 88%;
+    --secondary-foreground: 25 20% 20%;
+
+    /* Soft forest green muted tones */
+    --muted: 120 8% 90%;
+    --muted-foreground: 25 10% 45%;
+
+    /* Deep forest green accent */
+    --accent: 140 25% 35%;
+    --accent-foreground: 40 20% 96%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 40 20% 96%;
+
+    /* Subtle borders on parchment */
+    --border: 40 12% 85%;
+    --input: 40 12% 85%;
+    --ring: 25 35% 25%;
+
+    /* Gentle monastery curves */
+    --radius: 0.375rem;
+
+    /* Custom Sikkim theme colors */
+    /* Sky blue (muted, not bright) */
+    --sky: 210 40% 65%;
+    --sky-foreground: 40 20% 96%;
+
+    /* Golden accent (prayer wheel, butter lamps) */
+    --gold: 45 85% 55%;
+    --gold-foreground: 25 20% 20%;
+
+    /* Prayer flag colors (for borders/dividers only) */
+    --prayer-blue: 210 80% 60%;
+    --prayer-white: 0 0% 95%;
+    --prayer-red: 0 70% 55%;
+    --prayer-green: 120 60% 45%;
+    --prayer-yellow: 50 90% 65%;
+
+    /* Gradients for depth */
+    --gradient-parchment: linear-gradient(135deg, hsl(40 25% 96%), hsl(38 20% 92%));
+    --gradient-monastery: linear-gradient(135deg, hsl(25 35% 25%), hsl(25 30% 30%));
+    --gradient-sky: linear-gradient(180deg, hsl(210 40% 65%), hsl(210 35% 70%));
+
+    /* Shadows with cultural warmth */
+    --shadow-monastery: 0 8px 32px -8px hsl(25 35% 25% / 0.3);
+    --shadow-prayer: 0 4px 16px -4px hsl(45 85% 55% / 0.2);
+    --shadow-soft: 0 2px 8px -2px hsl(25 15% 15% / 0.1);
+
+    /* Transitions with monastery serenity */
+    --transition-monastery: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    --transition-prayer: all 0.3s ease-out;
+
+    --sidebar-background: 40 20% 96%;
+    --sidebar-foreground: 25 15% 15%;
+    --sidebar-primary: 25 35% 25%;
+    --sidebar-primary-foreground: 40 20% 96%;
+    --sidebar-accent: 40 12% 90%;
+    --sidebar-accent-foreground: 25 20% 20%;
+    --sidebar-border: 40 12% 85%;
+    --sidebar-ring: 25 35% 25%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  /* Prayer flag strip - for navigation header */
+  .prayer-flag-strip {
+    background: linear-gradient(
+      to right,
+      hsl(var(--prayer-blue)) 0% 20%,
+      hsl(var(--prayer-white)) 20% 40%,
+      hsl(var(--prayer-red)) 40% 60%,
+      hsl(var(--prayer-green)) 60% 80%,
+      hsl(var(--prayer-yellow)) 80% 100%
+    );
+  }
+
+  /* Shuttle Animation */
+  .shuttle-float {
+    animation: shuttle-float 6s ease-in-out infinite;
+  }
+  
+  @keyframes shuttle-float {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-10px) translateX(5px); }
+    50% { transform: translateY(0px) translateX(-5px); }
+    75% { transform: translateY(-5px) translateX(0px); }
+  }
+
+  .shuttle-glow {
+    animation: shuttle-glow 4s ease-in-out infinite;
+  }
+
+  @keyframes shuttle-glow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+
+  /* Monastery card styling */
+  .monastery-card {
+    background: var(--gradient-parchment);
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-monastery);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .monastery-card:hover {
+    box-shadow: var(--shadow-monastery);
+    transform: translateY(-2px);
+  }
+
+  /* Carved wood separator */
+  .wood-separator {
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      hsl(var(--muted-foreground) / 0.3) 20%, 
+      hsl(var(--muted-foreground) / 0.5) 50%, 
+      hsl(var(--muted-foreground) / 0.3) 80%, 
+      transparent 100%);
+    height: 1px;
+    position: relative;
+  }
+
+  .wood-separator::before {
+    content: "༄";  /* Tibetan ornament */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: hsl(var(--background));
+    color: hsl(var(--muted-foreground));
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  /* Panorama container for 360 drag-to-pan */
+  .panorama-container {
+    overflow: hidden;
+    cursor: grab;
+    position: relative;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .panorama-container:active {
+    cursor: grabbing;
+  }
+
+  .panorama-image {
+    width: 200%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.1s ease-out;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* Cultural styling for special elements */
+  .thangka-border {
+    border: 2px solid hsl(var(--gold));
+    border-radius: var(--radius);
+    box-shadow: 
+      inset 0 0 0 1px hsl(var(--gold) / 0.2),
+      var(--shadow-prayer);
+  }
+
+  /* Offline badge */
+  .offline-badge {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: calc(var(--radius) * 2);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* Responsive improvements */
+  .container-responsive {
+    @apply w-full mx-auto px-4;
+  }
+
+  @screen sm {
+    .container-responsive { @apply px-6; }
+  }
+
+  @screen lg {
+    .container-responsive { @apply px-8; }
+  }
+
+  /* Mobile-first touch targets */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Chat popup improvements */
+  .chat-popup {
+    @apply fixed bottom-4 right-4 z-50;
+    @apply w-80 h-96 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)];
+    @apply bg-card border border-border rounded-lg shadow-lg;
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .chat-popup.minimized {
+    @apply w-14 h-14 rounded-full;
+  }
+
+  /* Language selector styling */
+  .language-selector {
+    @apply bg-card/80 backdrop-blur-sm border border-border/50;
+    @apply rounded-lg shadow-sm;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  /* Prayer flag strip - for navigation header */
+  .prayer-flag-strip {
+    background: linear-gradient(
+      to right,
+      hsl(var(--prayer-blue)) 0% 20%,
+      hsl(var(--prayer-white)) 20% 40%,
+      hsl(var(--prayer-red)) 40% 60%,
+      hsl(var(--prayer-green)) 60% 80%,
+      hsl(var(--prayer-yellow)) 80% 100%
+    );
+  }
+
+  /* Monastery card styling */
+  .monastery-card {
+    background: var(--gradient-parchment);
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-monastery);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .monastery-card:hover {
+    box-shadow: var(--shadow-monastery);
+    transform: translateY(-2px);
+  }
+
+  /* Carved wood separator */
+  .wood-separator {
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      hsl(var(--muted-foreground) / 0.3) 20%, 
+      hsl(var(--muted-foreground) / 0.5) 50%, 
+      hsl(var(--muted-foreground) / 0.3) 80%, 
+      transparent 100%);
+    height: 1px;
+    position: relative;
+  }
+
+  .wood-separator::before {
+    content: "༄";  /* Tibetan ornament */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: hsl(var(--background));
+    color: hsl(var(--muted-foreground));
+    padding: 0 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  /* Panorama container for 360 drag-to-pan */
+  .panorama-container {
+    overflow: hidden;
+    cursor: grab;
+    position: relative;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .panorama-container:active {
+    cursor: grabbing;
+  }
+
+  .panorama-image {
+    width: 200%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.1s ease-out;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* Cultural styling for special elements */
+  .thangka-border {
+    border: 2px solid hsl(var(--gold));
+    border-radius: var(--radius);
+    box-shadow: 
+      inset 0 0 0 1px hsl(var(--gold) / 0.2),
+      var(--shadow-prayer);
+  }
+
+  /* Offline badge */
+  .offline-badge {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: calc(var(--radius) * 2);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+}
