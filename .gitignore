@@ -1,2 +1,26 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Environment variables
 .env
+.env.local
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cache
+.cache/
+.vite/
