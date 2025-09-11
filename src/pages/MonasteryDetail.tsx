@@ -9,6 +9,8 @@ import { useWeather } from '@/hooks/useWeather';
 import monasteryPanorama from '@/assets/monastery-panorama.jpg';
 import { Layout } from '@/components/Layout';
 import { AudioPlayer } from '@/components/AudioPlayer';
+import StreetView360 from '@/components/StreetView360';
+import ThreePanoramaViewer from '@/components/ThreePanoramaViewer';
 
 const languageNames = {
   en: { name: 'English', native: 'English' },
@@ -268,9 +270,24 @@ export default function MonasteryDetail() {
 
         {/* Panorama Section */}
         <section className="py-6 sm:py-8">
-          <div className="container-responsive">
+          <div className="container mx-auto px-4">
             <h2 className="text-xl sm:text-2xl font-serif font-bold mb-4">360° Virtual Experience</h2>
-            <PanoramaViewer src={monastery.images.panorama || monastery.images.hero} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Three.js Panorama Viewer */}
+              <ThreePanoramaViewer 
+                imageUrl={monastery.images.panorama || monastery.images.hero}
+                title={monastery.name}
+                className="w-full"
+              />
+              
+              {/* Google Street View */}
+              <StreetView360 
+                latitude={monastery.latitude}
+                longitude={monastery.longitude}
+                name={monastery.name}
+                className="w-full"
+              />
+            </div>
           </div>
         </section>
 

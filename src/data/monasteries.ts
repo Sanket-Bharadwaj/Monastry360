@@ -57,10 +57,10 @@ export const monasteries: Monastery[] = [
     distanceFromCapital: '24 km from Gangtok',
     tags: ['Karma Kagyu', 'Karmapa', 'Pilgrimage', 'Architecture'],
     images: {
-      hero: rumtekImage,
-      gallery: [rumtekImage],
-      panorama: rumtekImage,
-    },
+    hero: rumtekImage,
+    gallery: [rumtekImage],
+    panorama: '/images/panoramas/rumtek-360.jpg', // You can add actual 360° images here
+  },
     audio: {
       en: '/audio/rumtek-en.mp3',
       hi: '/audio/rumtek-hi.mp3',
@@ -88,10 +88,10 @@ export const monasteries: Monastery[] = [
     distanceFromCapital: '110 km from Gangtok',
     tags: ['Nyingma', 'Ancient', 'Woodwork', 'Guru Rinpoche'],
     images: {
-      hero: pemayangtseImage,
-      gallery: [pemayangtseImage],
-      panorama: pemayangtseImage,
-    },
+    hero: pemayangtseImage,
+    gallery: [pemayangtseImage],
+    panorama: '/images/panoramas/pemayangtse-360.jpg',
+  },
     audio: {
       en: '/audio/pemayangtse-en.mp3',
       hi: '/audio/pemayangtse-hi.mp3',
