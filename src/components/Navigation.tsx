@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, MapPin, Calendar, MessageSquare, Info, Home, Building2 } from 'lucide-react';
+import { Menu, X, MapPin, Calendar, Info, Home, Building2 } from 'lucide-react';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -9,7 +10,6 @@ const navigation = [
   { name: 'Map', href: '/map', icon: MapPin },
   { name: 'Monasteries', href: '/monasteries', icon: Building2 },
   { name: 'Calendar', href: '/calendar', icon: Calendar },
-  { name: 'Chat', href: '/chat', icon: MessageSquare },
   { name: 'About', href: '/about', icon: Info },
 ];
 
@@ -51,11 +51,9 @@ export function Navigation() {
             })}
           </nav>
 
-          {/* Language Switcher - Future */}
+          {/* Language Switcher */}
           <div className="hidden md:flex items-center space-x-2">
-            <Button variant="outline" size="sm" className="text-xs">
-              EN
-            </Button>
+            <LanguageSelector />
           </div>
 
           {/* Mobile Menu Button */}
@@ -92,9 +90,7 @@ export function Navigation() {
                 );
               })}
               <div className="pt-2 border-t border-border">
-                <Button variant="outline" size="sm" className="text-xs">
-                  EN • ལེ་ཝི • नेपाली • हिन्दी
-                </Button>
+                <LanguageSelector />
               </div>
             </nav>
           </div>
