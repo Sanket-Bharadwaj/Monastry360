@@ -7,17 +7,18 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import { useLanguage } from '@/components/LanguageContext';
 
 const languages = [
-  { code: 'en', name: 'English', nativeName: 'English' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
-  { code: 'ne', name: 'Nepali', nativeName: 'नेपाली' },
-  { code: 'lep', name: 'Lepcha', nativeName: 'རོང་' },
-  { code: 'sik', name: 'Sikkimese', nativeName: 'འབྲས་ལྗོངས་སྐད་' },
+  { code: 'en' as const, name: 'English', nativeName: 'English' },
+  { code: 'hi' as const, name: 'Hindi', nativeName: 'हिन्दी' },
+  { code: 'ne' as const, name: 'Nepali', nativeName: 'नेपाली' },
+  { code: 'lep' as const, name: 'Lepcha', nativeName: 'རོང་' },
+  { code: 'sik' as const, name: 'Sikkimese', nativeName: 'འབྲས་ལྗོངས་སྐད་' },
 ];
 
 export function LanguageSelector() {
-  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const { currentLanguage, setLanguage } = useLanguage();
 
   const currentLang = languages.find(lang => lang.code === currentLanguage) || languages[0];
 
@@ -34,7 +35,7 @@ export function LanguageSelector() {
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
-            onClick={() => setCurrentLanguage(language.code)}
+            onClick={() => setLanguage(language.code)}
             className={`${
               currentLanguage === language.code ? 'bg-accent text-accent-foreground' : ''
             }`}

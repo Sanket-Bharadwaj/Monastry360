@@ -116,24 +116,22 @@
     );
   }
 
-  /* Shuttle Animation */
+  /* Shuttle/Gentle Float Animation */
   .shuttle-float {
-    animation: shuttle-float 6s ease-in-out infinite;
+    animation: gentle-float 6s ease-in-out infinite;
   }
   
-  @keyframes shuttle-float {
-    0%, 100% { transform: translateY(0px) translateX(0px); }
-    25% { transform: translateY(-10px) translateX(5px); }
-    50% { transform: translateY(0px) translateX(-5px); }
-    75% { transform: translateY(-5px) translateX(0px); }
+  @keyframes gentle-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
   }
 
   .shuttle-glow {
-    animation: shuttle-glow 4s ease-in-out infinite;
+    animation: gentle-glow 4s ease-in-out infinite;
   }
 
-  @keyframes shuttle-glow {
-    0%, 100% { opacity: 0.7; }
+  @keyframes gentle-glow {
+    0%, 100% { opacity: 0.8; }
     50% { opacity: 1; }
   }
 
@@ -251,113 +249,37 @@
     @apply bg-card/80 backdrop-blur-sm border border-border/50;
     @apply rounded-lg shadow-sm;
   }
-}
 
-@layer base {
-  * {
-    @apply border-border;
+  /* Leaflet map custom styles */
+  .monastery-marker {
+    background: none !important;
+    border: none !important;
+  }
+  
+  .monastery-marker-inner {
+    background: hsl(var(--gold));
+    border: 2px solid hsl(var(--primary));
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  .monastery-marker-inner:hover {
+    transform: scale(1.1);
+  }
+  
+  .monastery-marker-icon {
+    font-size: 16px;
+    line-height: 1;
   }
 
-  body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Crimson Text', serif;
-    font-weight: 600;
-  }
-}
-
-@layer components {
-  /* Prayer flag strip - for navigation header */
-  .prayer-flag-strip {
-    background: linear-gradient(
-      to right,
-      hsl(var(--prayer-blue)) 0% 20%,
-      hsl(var(--prayer-white)) 20% 40%,
-      hsl(var(--prayer-red)) 40% 60%,
-      hsl(var(--prayer-green)) 60% 80%,
-      hsl(var(--prayer-yellow)) 80% 100%
-    );
-  }
-
-  /* Monastery card styling */
-  .monastery-card {
-    background: var(--gradient-parchment);
-    box-shadow: var(--shadow-soft);
-    transition: var(--transition-monastery);
-    border: 1px solid hsl(var(--border));
-  }
-
-  .monastery-card:hover {
-    box-shadow: var(--shadow-monastery);
-    transform: translateY(-2px);
-  }
-
-  /* Carved wood separator */
-  .wood-separator {
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      hsl(var(--muted-foreground) / 0.3) 20%, 
-      hsl(var(--muted-foreground) / 0.5) 50%, 
-      hsl(var(--muted-foreground) / 0.3) 80%, 
-      transparent 100%);
-    height: 1px;
-    position: relative;
-  }
-
-  .wood-separator::before {
-    content: "༄";  /* Tibetan ornament */
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: hsl(var(--background));
-    color: hsl(var(--muted-foreground));
-    padding: 0 0.75rem;
-    font-size: 0.875rem;
-  }
-
-  /* Panorama container for 360 drag-to-pan */
-  .panorama-container {
-    overflow: hidden;
-    cursor: grab;
-    position: relative;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-soft);
-  }
-
-  .panorama-container:active {
-    cursor: grabbing;
-  }
-
-  .panorama-image {
-    width: 200%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.1s ease-out;
-    user-select: none;
-    pointer-events: none;
-  }
-
-  /* Cultural styling for special elements */
-  .thangka-border {
-    border: 2px solid hsl(var(--gold));
-    border-radius: var(--radius);
-    box-shadow: 
-      inset 0 0 0 1px hsl(var(--gold) / 0.2),
-      var(--shadow-prayer);
-  }
-
-  /* Offline badge */
-  .offline-badge {
-    background: hsl(var(--muted));
-    color: hsl(var(--muted-foreground));
-    border: 1px solid hsl(var(--border));
-    border-radius: calc(var(--radius) * 2);
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 500;
+  .monastery-popup {
+    font-family: system-ui, -apple-system, sans-serif;
   }
 }

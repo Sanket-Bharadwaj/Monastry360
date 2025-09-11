@@ -123,8 +123,15 @@ export default function Monasteries() {
                       </Badge>
                     </div>
                   </CardHeader>
-                  
-                  <CardContent className="space-y-4">
+                  <CardContent>
+                    <div className="aspect-[4/3] bg-muted rounded-lg overflow-hidden mb-4">
+                    <img 
+                      src={monastery.images.hero} 
+                      alt={`${monastery.name} exterior view`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  </div>
                     <p className="text-sm text-muted-foreground line-clamp-3">
                       {monastery.summary}
                     </p>
