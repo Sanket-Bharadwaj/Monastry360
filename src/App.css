@@ -40,3 +40,58 @@
 .read-the-docs {
   color: #888;
 }
+
+
+/* Light Brown Theme for n8n Chat */
+:root {
+  --chat--color-primary: #8B7355;
+  --chat--color-primary-shade-50: #7A6649;
+  --chat--color-primary-shade-100: #6B5A3E;
+  --chat--color-secondary: #A0956B;
+  --chat--color-secondary-shade-50: #94895F;
+  --chat--color-white: #ffffff;
+  --chat--color-light: #F5F3F0;
+  --chat--color-light-shade-50: #EBE7E1;
+  --chat--color-light-shade-100: #D4CFC5;
+  --chat--color-medium: #C4B69A;
+  --chat--color-dark: #3D3426;
+  --chat--color-disabled: #9B9180;
+  --chat--color-typing: #5C5142;
+
+  --chat--spacing: 1rem;
+  --chat--border-radius: 0.25rem;
+  --chat--transition-duration: 0.15s;
+
+  --chat--window--width: 400px;
+  --chat--window--height: 600px;
+
+  --chat--header-height: auto;
+  --chat--header--padding: var(--chat--spacing);
+  --chat--header--background: var(--chat--color-dark);
+  --chat--header--color: var(--chat--color-light);
+  --chat--header--border-top: none;
+  --chat--header--border-bottom: none;
+  --chat--heading--font-size: 2em;
+  --chat--subtitle--font-size: inherit;
+  --chat--subtitle--line-height: 1.8;
+
+  --chat--textarea--height: 50px;
+
+  --chat--message--font-size: 1rem;
+  --chat--message--padding: var(--chat--spacing);
+  --chat--message--border-radius: var(--chat--border-radius);
+  --chat--message-line-height: 1.8;
+  --chat--message--bot--background: #F9F7F4;
+  --chat--message--bot--color: var(--chat--color-dark);
+  --chat--message--bot--border: 1px solid #E6E1D8;
+  --chat--message--user--background: var(--chat--color-secondary);
+  --chat--message--user--color: var(--chat--color-white);
+  --chat--message--user--border: none;
+  --chat--message--pre--background: rgba(139, 115, 85, 0.1);
+
+  --chat--toggle--background: var(--chat--color-primary);
+  --chat--toggle--hover--background: var(--chat--color-primary-shade-50);
+  --chat--toggle--active--background: var(--chat--color-primary-shade-100);
+  --chat--toggle--color: var(--chat--color-white);
+  --chat--toggle--size: 64px;
+}
