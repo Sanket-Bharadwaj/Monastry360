@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { monasteries } from '@/data/monasteries';
@@ -21,6 +21,14 @@ export function RealSikkimMap({ selectedDistrict, onMarkerClick, className = "" 
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
+  
+  // State for legend visibility
+  const [isLegendVisible, setIsLegendVisible] = useState(true);
+
+  // Toggle legend visibility
+  const toggleLegend = () => {
+    setIsLegendVisible(prev => !prev);
+  };
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -298,29 +306,72 @@ export function RealSikkimMap({ selectedDistrict, onMarkerClick, className = "" 
         style={{ minHeight: '400px' }}
       />
       
-      {/* District Legend */}
-      <div className="district-legend">
-        <div style={{ fontWeight: 'bold', marginBottom: '4px', fontSize: '12px' }}>
-          🏛️ Monastery Districts
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#FF6B6B' }}></div>
-            <span>East Sikkim</span>
+      {/* Toggle Button for District Legend */}
+      <div className="district-legend-toggle">
+        <button
+          onClick={toggleLegend}
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: 'rgba(139, 69, 19, 0.9)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '8px 12px',
+            cursor: 'pointer',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+            zIndex: 1001,
+            transition: 'all 0.2s ease',
+          }}
+          className="legend-toggle-btn"
+        >
+          🏛️ Districts {isLegendVisible ? '▼' : '▶'}
+        </button>
+        
+        {/* District Legend Box */}
+        {isLegendVisible && (
+          <div className="district-legend" style={{ top: '50px' }}>
+            <div style={{ fontWeight: 'bold', marginBottom: '6px', fontSize: '12px', textAlign: 'center' }}>
+              🏛️ Monastery Districts
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {Object.entries({
+                'East': '#FF6B6B',
+                'West': '#4ECDC4', 
+                'North': '#45B7D1',
+                'South': '#96CEB4'
+              }).map(([district, color]) => (
+                <div 
+                  key={district}
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '6px',
+                    padding: '3px 0',
+                  }}
+                >
+                  <div style={{ 
+                    width: '14px', 
+                    height: '14px', 
+                    borderRadius: '50%', 
+                    background: color,
+                    boxShadow: `0 0 4px ${color}50`
+                  }}></div>
+                  <span style={{ 
+                    fontSize: '11px',
+                    fontWeight: '500',
+                    color: '#2c3e50'
+                  }}>
+                    {district} Sikkim
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#4ECDC4' }}></div>
-            <span>West Sikkim</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#45B7D1' }}></div>
-            <span>North Sikkim</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#96CEB4' }}></div>
-            <span>South Sikkim</span>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
