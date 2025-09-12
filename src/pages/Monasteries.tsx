@@ -29,9 +29,9 @@ export default function Monasteries() {
 
   return (
     <Layout>
-      <div className="min-h-screen py-8">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
+      <div className="page-wrapper py-8 pt-12">
+        <div className="container-responsive">
+          <div className="text-center mb-8 mt-8">
             <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">
               Sacred Monasteries of Sikkim
             </h1>

@@ -194,7 +194,7 @@ export default function MonasteryDetail() {
       <div className="min-h-screen">
         {/* Header */}
         <section className="bg-card border-b">
-          <div className="container mx-auto px-4 py-8">
+          <div className="container-responsive py-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Info */}
               <div className="lg:col-span-2">
@@ -270,7 +270,7 @@ export default function MonasteryDetail() {
 
         {/* Panorama Section */}
         <section className="py-6 sm:py-8">
-          <div className="container mx-auto px-4">
+          <div className="container-responsive">
             <h2 className="text-xl sm:text-2xl font-serif font-bold mb-4">360° Virtual Experience</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Three.js Panorama Viewer */}
@@ -295,7 +295,7 @@ export default function MonasteryDetail() {
 
         {/* Description */}
         <section className="py-12">
-          <div className="container mx-auto px-4 max-w-4xl">
+          <div className="container-responsive max-w-4xl mx-auto">
             <div className="prose prose-lg max-w-none">
               <h2 className="text-2xl font-serif font-bold mb-4">About {monastery.name}</h2>
               <p className="text-muted-foreground leading-relaxed mb-6">

@@ -9,10 +9,10 @@ export default function Home() {
   const featuredMonasteries = monasteries.slice(0, 6);
 
   return (
-    <div className="min-h-screen">
+    <>
       {/* Hero Section */}
       <section 
-        className="relative h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
+        className="hero-fullscreen flex items-center justify-center"
         style={{ backgroundImage: `url(${heroImage})` }}
       >
         <div className="absolute inset-0 bg-primary/20 backdrop-blur-[1px]" />
@@ -44,9 +44,11 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="wood-separator" />
+      {/* Rest of the page content */}
+      <div className="w-full">
+        <div className="wood-separator" />
 
-      {/* Featured Monasteries */}
+        {/* Featured Monasteries */}
       <section className="py-8 sm:py-12 lg:py-16 px-4">
         <div className="container-responsive max-w-6xl">
           <div className="text-center mb-8 sm:mb-12">
@@ -150,6 +152,8 @@ export default function Home() {
           </p>
         </div>
       </footer>
-    </div>
+      
+      </div> {/* Close the rest of page content wrapper */}
+    </>
   );
 }
