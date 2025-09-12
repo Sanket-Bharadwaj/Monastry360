@@ -25,40 +25,78 @@ export function RealSikkimMap({ selectedDistrict, onMarkerClick, className = "" 
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // Initialize map
+    // Initialize map with Sikkim-focused view
     const map = L.map(mapRef.current, {
       center: [27.3389, 88.6139], // Center of Sikkim
-      zoom: 10,
+      zoom: 11, // Increased zoom for better Sikkim focus
       zoomControl: true,
       scrollWheelZoom: true,
       dragging: true,
       touchZoom: true,
       doubleClickZoom: true,
+      maxZoom: 15,
+      minZoom: 9, // Prevent zooming out too far from Sikkim
     });
 
-    // Add OpenStreetMap tiles
+    // Add OpenStreetMap tiles with custom attribution
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
+      attribution: '© OpenStreetMap | Sikkim Buddhist Heritage',
       maxZoom: 18,
     }).addTo(map);
 
-    // Sikkim boundary (approximate)
+    // More detailed Sikkim boundary
     const sikkimBounds: [number, number][] = [
-      [28.0728, 88.0626], // Northwest
-      [28.0728, 88.9063], // Northeast  
-      [27.0449, 88.9063], // Southeast
-      [27.0449, 88.0626], // Southwest
-      [28.0728, 88.0626], // Close polygon
+      [28.1276, 88.0626], // Nathu La Pass area
+      [28.0900, 88.9200], // Northeast border
+      [27.9500, 88.9100], // East Sikkim
+      [27.8000, 88.8500], // Southeast
+      [27.1600, 88.7500], // South border
+      [27.0800, 88.3000], // Southwest
+      [27.2000, 88.0500], // West border
+      [27.4500, 88.0300], // Northwest
+      [27.8000, 88.1000], // North
+      [28.1276, 88.0626], // Close polygon back to start
     ];
 
-    // Add Sikkim boundary
-    L.polygon(sikkimBounds, {
-      color: 'hsl(var(--primary))',
-      weight: 2,
-      opacity: 0.8,
-      fillColor: 'hsl(var(--primary))',
-      fillOpacity: 0.1,
+    // Add prominent Sikkim boundary
+    const sikkimPolygon = L.polygon(sikkimBounds, {
+      color: '#8B4513', // Buddhist brown
+      weight: 3,
+      opacity: 0.9,
+      fillColor: '#FFF8DC', // Warm monastery color
+      fillOpacity: 0.15,
+      dashArray: '5, 5', // Dashed border for sacred feel
     }).addTo(map);
+
+    // Add a label for Sikkim
+    const sikkimCenter = [27.5, 88.5];
+    L.marker(sikkimCenter, {
+      icon: L.divIcon({
+        className: 'sikkim-label',
+        html: `
+          <div style="
+            background: rgba(139, 69, 19, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: serif;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border: 1px solid #654321;
+          ">
+            སུ་ཁིམ་<br/>SIKKIM<br/>
+            <span style="font-size: 10px;">Buddhist Heritage Land</span>
+          </div>
+        `,
+        iconSize: [120, 50],
+        iconAnchor: [60, 25],
+      })
+    }).addTo(map);
+
+    // Set initial view to fit Sikkim perfectly
+    map.fitBounds(sikkimPolygon.getBounds(), { padding: [20, 20] });
 
     mapInstanceRef.current = map;
 
@@ -85,44 +123,160 @@ export function RealSikkimMap({ selectedDistrict, onMarkerClick, className = "" 
       ? monasteries 
       : monasteries.filter(m => m.district === selectedDistrict);
 
-    // Create custom icon
+    // Create enhanced monastery icon
     const monasteryIcon = L.divIcon({
       className: 'monastery-marker',
       html: `
-        <div class="monastery-marker-inner">
-          <div class="monastery-marker-icon">🏛️</div>
+        <div class="monastery-marker-inner" style="
+          background: linear-gradient(135deg, #DAA520, #B8860B);
+          border: 2px solid #8B4513;
+          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: transform 0.2s;
+          box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        ">
+          <div class="monastery-marker-icon" style="
+            font-size: 18px;
+            line-height: 1;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
+          ">🏛️</div>
         </div>
       `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32],
+      iconSize: [36, 36],
+      iconAnchor: [18, 36],
+      popupAnchor: [0, -36],
     });
+
+    // Add district color coding
+    const districtColors = {
+      'East': '#FF6B6B',
+      'West': '#4ECDC4', 
+      'North': '#45B7D1',
+      'South': '#96CEB4'
+    };
 
     // Add markers for filtered monasteries
     filteredMonasteries.forEach(monastery => {
+      const districtColor = districtColors[monastery.district as keyof typeof districtColors] || '#DAA520';
+      
+      const enhancedIcon = L.divIcon({
+        className: 'monastery-marker',
+        html: `
+          <div class="monastery-marker-inner" style="
+            background: linear-gradient(135deg, ${districtColor}, ${districtColor}CC);
+            border: 3px solid #8B4513;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            position: relative;
+          ">
+            <div class="monastery-marker-icon" style="
+              font-size: 20px;
+              line-height: 1;
+              filter: drop-shadow(0 1px 2px rgba(0,0,0,0.7));
+            ">🏛️</div>
+            <div style="
+              position: absolute;
+              bottom: -25px;
+              left: 50%;
+              transform: translateX(-50%);
+              background: rgba(139, 69, 19, 0.9);
+              color: white;
+              padding: 2px 6px;
+              border-radius: 3px;
+              font-size: 10px;
+              font-weight: bold;
+              white-space: nowrap;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+              display: none;
+            " class="monastery-label">${monastery.name}</div>
+          </div>
+        `,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40],
+      });
+
       const marker = L.marker([monastery.latitude, monastery.longitude], {
-        icon: monasteryIcon,
+        icon: enhancedIcon,
       });
 
       marker.on('click', () => {
         onMarkerClick(monastery);
       });
 
-      // Add popup with monastery info
+      // Enhanced popup with monastery info
       marker.bindPopup(`
-        <div class="monastery-popup">
-          <h3 class="font-serif font-bold text-sm mb-1">${monastery.name}</h3>
-          <p class="text-xs text-gray-600 mb-2">${monastery.district} District • ${monastery.sect}</p>
-          <p class="text-xs mb-2">${monastery.summary}</p>
-          <div class="text-xs text-gray-500">
-            <div>📍 ${monastery.nearestTown}</div>
-            <div>⛰️ ${monastery.elevation}m</div>
-            <div>📅 Founded ${monastery.founded}</div>
+        <div class="monastery-popup" style="
+          font-family: 'Crimson Text', serif;
+          max-width: 280px;
+        ">
+          <div style="
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+            padding: 8px 12px;
+            margin: -8px -12px 8px -12px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 4px 4px 0 0;
+          ">
+            🏛️ ${monastery.name}
+          </div>
+          
+          <div style="padding: 4px 0;">
+            <div style="
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 6px;
+              font-size: 12px;
+              color: #666;
+            ">
+              <span style="
+                background: ${districtColors[monastery.district as keyof typeof districtColors] || '#DAA520'};
+                color: white;
+                padding: 2px 6px;
+                border-radius: 10px;
+                font-weight: bold;
+              ">${monastery.district} District</span>
+              <span style="font-style: italic;">${monastery.sect}</span>
+            </div>
+            
+            <p style="
+              font-size: 13px;
+              line-height: 1.4;
+              margin: 8px 0;
+              color: #333;
+            ">${monastery.summary}</p>
+            
+            <div style="
+              border-top: 1px solid #eee;
+              padding-top: 6px;
+              font-size: 11px;
+              color: #666;
+            ">
+              <div style="margin: 2px 0;">📍 ${monastery.nearestTown}</div>
+              <div style="margin: 2px 0;">⛰️ ${monastery.elevation}m elevation</div>
+              <div style="margin: 2px 0;">📅 Founded ${monastery.founded}</div>
+              <div style="margin: 4px 0; font-style: italic;">🕉️ ${monastery.bestTimeToVisit}</div>
+            </div>
           </div>
         </div>
       `, {
-        maxWidth: 250,
-        className: 'monastery-popup-container'
+        maxWidth: 300,
+        className: 'monastery-popup-container',
+        closeButton: true,
+        autoClose: false,
       });
 
       marker.addTo(mapInstanceRef.current!);
@@ -137,12 +291,37 @@ export function RealSikkimMap({ selectedDistrict, onMarkerClick, className = "" 
   }, [selectedDistrict, onMarkerClick]);
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative sikkim-map-container ${className}`}>
       <div 
         ref={mapRef} 
         className="w-full h-[500px] lg:h-[600px] rounded-lg border border-border"
         style={{ minHeight: '400px' }}
       />
+      
+      {/* District Legend */}
+      <div className="district-legend">
+        <div style={{ fontWeight: 'bold', marginBottom: '4px', fontSize: '12px' }}>
+          🏛️ Monastery Districts
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#FF6B6B' }}></div>
+            <span>East Sikkim</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#4ECDC4' }}></div>
+            <span>West Sikkim</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#45B7D1' }}></div>
+            <span>North Sikkim</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#96CEB4' }}></div>
+            <span>South Sikkim</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
