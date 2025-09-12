@@ -20,10 +20,10 @@ export default function Map() {
 
   return (
     <Layout>
-      <div className="page-wrapper py-8 pt-12">
+      <div className="page-wrapper py-8 pt-12 bg-gradient-to-br from-background via-background to-muted/10 min-h-screen">
         <div className="container-responsive">
           <div className="text-center mb-8 mt-8">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold mb-4">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold mb-4 bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               Sikkim Monastery Map
             </h1>
             <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -33,7 +33,7 @@ export default function Map() {
           </div>
 
           {/* District Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
+          <div className="flex flex-wrap justify-center gap-2 mb-8 p-4 bg-card/50 rounded-lg border border-border/50 backdrop-blur-sm">
             <Filter className="h-4 w-4 text-muted-foreground mt-2 mr-2" />
             {districts.map((district) => (
               <Button
@@ -41,119 +41,150 @@ export default function Map() {
                 variant={selectedDistrict === district ? "default" : "outline"}
                 onClick={() => setSelectedDistrict(district)}
                 size="sm"
-                className="touch-target"
+                className="touch-target shadow-sm"
               >
                 {district} {district !== 'All' && `(${getMonasteriesByDistrict(district).length})`}
               </Button>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             {/* Real Map */}
             <div className="order-2 lg:order-1">
-              <Card className="p-4">
-                <RealSikkimMap 
-                  selectedDistrict={selectedDistrict} 
-                  onMarkerClick={setSelectedMonastery}
-                />
-                <p className="text-xs text-muted-foreground text-center mt-4">
-                  Click on monastery markers to view details. Zoom and pan to explore.
-                </p>
+              <Card className="overflow-hidden shadow-lg border-0 bg-gradient-to-br from-card via-card to-muted/20">
+                <div className="p-6">
+                  <div className="aspect-[4/3] min-h-[400px] bg-muted/30 rounded-lg overflow-hidden shadow-inner border border-border/50">
+                    <RealSikkimMap 
+                      selectedDistrict={selectedDistrict} 
+                      onMarkerClick={setSelectedMonastery}
+                    />
+                  </div>
+                  <div className="mt-4 p-3 bg-muted/40 rounded-md border border-border/30">
+                    <p className="text-xs text-muted-foreground text-center">
+                      <MapPin className="h-3 w-3 inline mr-1" />
+                      Click on monastery markers to view details. Zoom and pan to explore.
+                    </p>
+                  </div>
+                </div>
               </Card>
             </div>
 
             {/* Monastery List / Details */}
             <div className="order-1 lg:order-2">
-              {selectedMonastery ? (
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="font-serif">{selectedMonastery.name}</CardTitle>
-                        <CardDescription>
-                          {selectedMonastery.district} District • {selectedMonastery.sect}
-                        </CardDescription>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setSelectedMonastery(null)}
-                      >
-                        ×
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      {selectedMonastery.summary}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-1">
-                      {selectedMonastery.tags.map((tag: string) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-2 text-sm">
-                      <div className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span>{selectedMonastery.nearestTown}</span>
-                      </div>
-                      <div>
-                        <strong>Founded:</strong> {selectedMonastery.founded}
-                      </div>
-                      <div>
-                        <strong>Elevation:</strong> {selectedMonastery.elevation}m
-                      </div>
-                      <div>
-                        <strong>Best Time:</strong> {selectedMonastery.bestTimeToVisit}
-                      </div>
-                    </div>
-
-                    <Button asChild className="w-full">
-                      <Link to={`/monasteries/${selectedMonastery.slug}`}>
-                        Explore Virtual Tour
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-4">
-                  <h3 className="text-xl font-serif font-semibold">
-                    {selectedDistrict === 'All' ? 'All Monasteries' : `${selectedDistrict} District Monasteries`}
-                  </h3>
-                  
-                  <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {filteredMonasteries.map((monastery) => (
-                      <Card
-                        key={monastery.id}
-                        className="cursor-pointer hover:shadow-md transition-shadow"
-                        onClick={() => setSelectedMonastery(monastery)}
-                      >
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-base font-serif">
-                            {monastery.name}
-                          </CardTitle>
-                          <CardDescription className="text-xs">
-                            {monastery.sect} • Founded {monastery.founded}
+              <div className="sticky top-24">
+                {selectedMonastery ? (
+                  <Card className="h-fit shadow-lg border-0 bg-gradient-to-br from-card via-card to-muted/20">
+                    <CardHeader className="bg-gradient-to-r from-primary/5 to-primary/10 border-b border-border/50">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <CardTitle className="font-serif text-lg">{selectedMonastery.name}</CardTitle>
+                          <CardDescription>
+                            {selectedMonastery.district} District • {selectedMonastery.sect}
                           </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-xs text-muted-foreground mb-2">
-                            {monastery.summary.slice(0, 100)}...
-                          </p>
-                          <div className="flex items-center text-xs text-muted-foreground">
-                            <MapPin className="h-3 w-3 mr-1" />
-                            {monastery.nearestTown}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedMonastery(null)}
+                          className="text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        >
+                          ×
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4 p-6">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {selectedMonastery.summary}
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-1">
+                        {selectedMonastery.tags.map((tag: string) => (
+                          <Badge key={tag} variant="secondary" className="text-xs shadow-sm">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+
+                      <div className="space-y-3 p-4 bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg border border-border/30">
+                        <div className="grid grid-cols-1 gap-2 text-sm">
+                          <div className="flex items-center">
+                            <MapPin className="h-4 w-4 mr-2 text-muted-foreground flex-shrink-0" />
+                            <span>{selectedMonastery.nearestTown}</span>
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
+                          <div className="flex">
+                            <span className="font-medium w-20 flex-shrink-0">Founded:</span>
+                            <span>{selectedMonastery.founded}</span>
+                          </div>
+                          <div className="flex">
+                            <span className="font-medium w-20 flex-shrink-0">Elevation:</span>
+                            <span>{selectedMonastery.elevation}m</span>
+                          </div>
+                          <div className="flex">
+                            <span className="font-medium w-20 flex-shrink-0">Best Time:</span>
+                            <span>{selectedMonastery.bestTimeToVisit}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Button asChild className="w-full shadow-md">
+                        <Link to={`/monasteries/${selectedMonastery.slug}`}>
+                          Explore Virtual Tour →
+                        </Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card className="h-fit shadow-lg border-0 bg-gradient-to-br from-card via-card to-muted/20">
+                    <CardHeader className="bg-gradient-to-r from-primary/5 to-primary/10 border-b border-border/50">
+                      <CardTitle className="text-lg font-serif">
+                        {selectedDistrict === 'All' ? 'All Monasteries' : `${selectedDistrict} District Monasteries`}
+                      </CardTitle>
+                      <CardDescription>
+                        Click any monastery below or on the map to view details
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                        {filteredMonasteries.map((monastery) => (
+                          <Card
+                            key={monastery.id}
+                            className="cursor-pointer hover:shadow-md hover:border-primary/50 transition-all duration-200 bg-gradient-to-r from-card/80 to-card/60 hover:from-card hover:to-card border border-border/30"
+                            onClick={() => setSelectedMonastery(monastery)}
+                          >
+                            <CardHeader className="pb-2">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <CardTitle className="text-sm font-serif font-medium">
+                                    {monastery.name}
+                                  </CardTitle>
+                                  <CardDescription className="text-xs">
+                                    {monastery.sect} • Founded {monastery.founded}
+                                  </CardDescription>
+                                </div>
+                                <Badge variant="outline" className="text-xs ml-2 flex-shrink-0 shadow-sm">
+                                  {monastery.district}
+                                </Badge>
+                              </div>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                              <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                                {monastery.summary}
+                              </p>
+                              <div className="flex items-center text-xs text-muted-foreground">
+                                <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
+                                <span className="truncate">{monastery.nearestTown}</span>
+                                <span className="ml-auto text-xs font-medium">
+                                  {monastery.elevation}m
+                                </span>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
             </div>
           </div>
         </div>
