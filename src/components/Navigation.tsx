@@ -18,11 +18,11 @@ export function Navigation() {
   const location = useLocation();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border w-full" style={{ margin: 0, padding: 0 }}>
       {/* Prayer flag strip */}
-      <div className="prayer-flag-strip h-1" />
+      <div className="prayer-flag-strip h-1 w-full" />
       
-      <div className="container mx-auto px-4">
+      <div className="w-full px-4" style={{ margin: 0 }}>
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex flex-col">

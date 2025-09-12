@@ -237,9 +237,9 @@ This guide focuses specifically on Sikkim's monasteries and their rich cultural 
 
   return (
     <Layout>
-      <div className="min-h-screen py-8">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-6">
+      <div className="min-h-screen py-8 pt-12">
+        <div className="container-responsive max-w-4xl mx-auto">
+          <div className="text-center mb-6 mt-4">
             <h1 className="text-3xl font-serif font-bold mb-2">
               Ask About Sikkim's Monasteries
             </h1>

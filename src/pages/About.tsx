@@ -7,10 +7,10 @@ import { Layout } from '@/components/Layout';
 export default function About() {
   return (
     <Layout>
-      <div className="min-h-screen py-8">
-        <div className="container mx-auto px-4 max-w-4xl">
+      <div className="page-wrapper py-8 pt-12">
+        <div className="container-responsive max-w-4xl mx-auto">
           {/* Hero Section */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 mt-8">
             <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">
               About Monastery360
             </h1>
