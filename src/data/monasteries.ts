@@ -62,7 +62,7 @@ export const monasteries: Monastery[] = [
     panorama: '/images/panoramas/rumtek-360.jpg', // You can add actual 360° images here
   },
     audio: {
-      en: '/audio/rumtek-en.mp3',
+      en: '/audio/monasteries/rumtek/english.mp3',
       hi: '/audio/rumtek-hi.mp3',
       ne: '/audio/rumtek-ne.mp3',
       lep: '/audio/rumtek-lep.mp3',
