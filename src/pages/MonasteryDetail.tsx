@@ -198,13 +198,15 @@ function AudioGuides({ audioFiles }: { audioFiles: Record<string, string> }) {
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Get all possible languages, not just available ones
+  const allLanguages = ['en', 'hi', 'ne', 'lep', 'sik'];
   const availableLanguages = Object.keys(audioFiles).filter(lang => audioFiles[lang]);
 
   useEffect(() => {
-    if (availableLanguages.length > 0 && !selectedLanguage) {
-      setSelectedLanguage(availableLanguages[0]);
+    if (allLanguages.length > 0 && !selectedLanguage) {
+      setSelectedLanguage(allLanguages[0]); // Default to first language
     }
-  }, [availableLanguages]);
+  }, []);
 
   const togglePlay = () => {
     if (!audioRef.current || !selectedLanguage || !audioFiles[selectedLanguage]) return;
@@ -244,33 +246,14 @@ function AudioGuides({ audioFiles }: { audioFiles: Record<string, string> }) {
     setCurrentTime(0);
   };
 
-  if (availableLanguages.length === 0) {
-    return (
-      <Card className="w-full">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm flex items-center">
-            <Volume2 className="h-4 w-4 mr-1" />
-            Audio Guides
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center p-4 bg-muted/30 rounded-lg border-dashed border">
-            <Languages className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">
-              Audio Guides - Awaiting Curated Content
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const hasCurrentAudio = selectedLanguage && audioFiles[selectedLanguage];
 
   return (
     <Card className="w-full">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center">
-          <Volume2 className="h-4 w-4 mr-1" />
-          Audio Guides
+        <CardTitle className="text-sm flex items-center gap-2">
+          <Volume2 className="h-4 w-4 text-primary" />
+          <span>Audio Guides</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -282,15 +265,20 @@ function AudioGuides({ audioFiles }: { audioFiles: Record<string, string> }) {
               <SelectValue placeholder="Choose language" />
             </SelectTrigger>
             <SelectContent>
-              {availableLanguages.map((lang) => (
+              {allLanguages.map((lang) => (
                 <SelectItem key={lang} value={lang}>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm">
-                      {languageNames[lang as keyof typeof languageNames]?.native || lang}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      ({languageNames[lang as keyof typeof languageNames]?.name || lang})
-                    </span>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm">
+                        {languageNames[lang as keyof typeof languageNames]?.native || lang}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        ({languageNames[lang as keyof typeof languageNames]?.name || lang})
+                      </span>
+                    </div>
+                    {!audioFiles[lang] && (
+                      <span className="text-xs text-orange-500 font-medium">Coming Soon</span>
+                    )}
                   </div>
                 </SelectItem>
               ))}
@@ -298,8 +286,18 @@ function AudioGuides({ audioFiles }: { audioFiles: Record<string, string> }) {
           </Select>
         </div>
 
-        {/* Audio Player */}
-        {selectedLanguage && audioFiles[selectedLanguage] && (
+        {/* Current Language Display */}
+        <div className="text-center p-2 bg-muted/20 rounded">
+          <p className="text-sm font-medium">
+            {languageNames[selectedLanguage as keyof typeof languageNames]?.native || selectedLanguage}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {languageNames[selectedLanguage as keyof typeof languageNames]?.name || selectedLanguage}
+          </p>
+        </div>
+
+        {/* Audio Player or Coming Soon Message */}
+        {hasCurrentAudio ? (
           <div className="space-y-3">
             <audio
               ref={audioRef}
@@ -308,16 +306,6 @@ function AudioGuides({ audioFiles }: { audioFiles: Record<string, string> }) {
               onLoadedMetadata={handleLoadedMetadata}
               onEnded={() => setIsPlaying(false)}
             />
-            
-            {/* Current Language Display */}
-            <div className="text-center p-2 bg-muted/20 rounded">
-              <p className="text-sm font-medium">
-                {languageNames[selectedLanguage as keyof typeof languageNames]?.native || selectedLanguage}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {languageNames[selectedLanguage as keyof typeof languageNames]?.name || selectedLanguage}
-              </p>
-            </div>
 
             {/* Progress Bar */}
             <div className="space-y-1">
@@ -353,6 +341,18 @@ function AudioGuides({ audioFiles }: { audioFiles: Record<string, string> }) {
                   </>
                 )}
               </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center p-6 bg-muted/30 rounded-lg border-dashed border">
+            <Languages className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+            <h3 className="text-sm font-medium text-foreground mb-2">Audio Guide Coming Soon</h3>
+            <p className="text-xs text-muted-foreground mb-3">
+              We're working on creating high-quality audio content for this language.
+            </p>
+            <div className="flex items-center justify-center space-x-2 text-xs text-orange-600">
+              <Clock className="h-3 w-3" />
+              <span>Expected soon</span>
             </div>
           </div>
         )}
