@@ -3,7 +3,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Play, Pause, MapPin, Clock, Mountain, Calendar, Thermometer, Wind, CloudRain } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Play, Pause, MapPin, Clock, Mountain, Calendar, Thermometer, Wind, CloudRain, Volume2, Languages } from 'lucide-react';
 import { getMonasteryBySlug } from '@/data/monasteries';
 import { useWeather } from '@/hooks/useWeather';
 import monasteryPanorama from '@/assets/monastery-panorama.jpg';
@@ -132,12 +133,15 @@ function WeatherWidget({ lat, lon, name }: { lat: number; lon: number; name: str
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Current Weather</CardTitle>
+      <Card className="w-full min-h-0">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+            <Thermometer className="h-4 w-4 text-primary" />
+            <span>Current Weather</span>
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="text-xs text-muted-foreground">Loading weather data...</div>
+        <CardContent className="pt-0">
+          <div className="text-sm text-foreground font-medium">Loading weather data...</div>
         </CardContent>
       </Card>
     );
@@ -145,37 +149,213 @@ function WeatherWidget({ lat, lon, name }: { lat: number; lon: number; name: str
 
   if (error || !weather) {
     return (
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Weather</CardTitle>
+      <Card className="w-full min-h-0">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+            <Thermometer className="h-4 w-4 text-primary" />
+            <span>Weather</span>
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="text-xs text-muted-foreground">Weather data unavailable</div>
+        <CardContent className="pt-0">
+          <div className="text-sm text-foreground font-medium">Weather data unavailable</div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center">
-          <Thermometer className="h-4 w-4 mr-1" />
-          Current Weather
+    <Card className="w-full min-h-0">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm flex items-center gap-2 text-foreground">
+          <Thermometer className="h-4 w-4 text-primary" />
+          <span>Current Weather</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="pt-0 space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold">{Math.round(weather.temperature)}°C</span>
-          <CloudRain className="h-6 w-6 text-sky" />
+          <span className="text-3xl font-bold text-foreground">{Math.round(weather.temperature)}°C</span>
+          <CloudRain className="h-8 w-8 text-blue-500" />
         </div>
-        <div className="text-xs text-muted-foreground space-y-1">
-          <div className="flex items-center">
-            <Wind className="h-3 w-3 mr-1" />
-            Wind: {weather.windSpeed} km/h
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Wind className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="text-sm font-medium text-foreground">Wind: {weather.windSpeed} km/h</span>
           </div>
-          <div>Condition: {weather.condition}</div>
+          <div className="flex items-center gap-2">
+            <CloudRain className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="text-sm font-medium text-foreground">Condition: {weather.condition}</span>
+          </div>
         </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function AudioGuides({ audioFiles }: { audioFiles: Record<string, string> }) {
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const availableLanguages = Object.keys(audioFiles).filter(lang => audioFiles[lang]);
+
+  useEffect(() => {
+    if (availableLanguages.length > 0 && !selectedLanguage) {
+      setSelectedLanguage(availableLanguages[0]);
+    }
+  }, [availableLanguages]);
+
+  const togglePlay = () => {
+    if (!audioRef.current || !selectedLanguage || !audioFiles[selectedLanguage]) return;
+    
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const handleLanguageChange = (language: string) => {
+    if (isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    }
+    setSelectedLanguage(language);
+    setCurrentTime(0);
+  };
+
+  if (availableLanguages.length === 0) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center">
+            <Volume2 className="h-4 w-4 mr-1" />
+            Audio Guides
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center p-4 bg-muted/30 rounded-lg border-dashed border">
+            <Languages className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+            <p className="text-xs text-muted-foreground">
+              Audio Guides - Awaiting Curated Content
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="w-full">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm flex items-center">
+          <Volume2 className="h-4 w-4 mr-1" />
+          Audio Guides
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Language Selection */}
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-muted-foreground">Select Language:</label>
+          <Select value={selectedLanguage} onValueChange={handleLanguageChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Choose language" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableLanguages.map((lang) => (
+                <SelectItem key={lang} value={lang}>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm">
+                      {languageNames[lang as keyof typeof languageNames]?.native || lang}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      ({languageNames[lang as keyof typeof languageNames]?.name || lang})
+                    </span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Audio Player */}
+        {selectedLanguage && audioFiles[selectedLanguage] && (
+          <div className="space-y-3">
+            <audio
+              ref={audioRef}
+              src={audioFiles[selectedLanguage]}
+              onTimeUpdate={handleTimeUpdate}
+              onLoadedMetadata={handleLoadedMetadata}
+              onEnded={() => setIsPlaying(false)}
+            />
+            
+            {/* Current Language Display */}
+            <div className="text-center p-2 bg-muted/20 rounded">
+              <p className="text-sm font-medium">
+                {languageNames[selectedLanguage as keyof typeof languageNames]?.native || selectedLanguage}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {languageNames[selectedLanguage as keyof typeof languageNames]?.name || selectedLanguage}
+              </p>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="space-y-1">
+              <div className="w-full bg-muted rounded-full h-2">
+                <div 
+                  className="bg-primary h-2 rounded-full transition-all duration-300" 
+                  style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                ></div>
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{formatTime(currentTime)}</span>
+                <span>{formatTime(duration)}</span>
+              </div>
+            </div>
+
+            {/* Play Button */}
+            <div className="flex justify-center">
+              <Button
+                onClick={togglePlay}
+                variant="outline"
+                size="sm"
+                className="flex items-center space-x-2"
+              >
+                {isPlaying ? (
+                  <>
+                    <Pause className="h-4 w-4" />
+                    <span>Pause</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4" />
+                    <span>Play Guide</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
@@ -193,8 +373,8 @@ export default function MonasteryDetail() {
     <Layout>
       <div className="min-h-screen">
         {/* Header */}
-        <section className="bg-card border-b">
-          <div className="container-responsive py-8">
+        <section className="bg-card border-b overflow-hidden pt-12 md:pt-16 pb-8">
+          <div className="container-responsive">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Info */}
               <div className="lg:col-span-2">
@@ -239,30 +419,18 @@ export default function MonasteryDetail() {
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-4">
+              <div className="space-y-4 mt-4 md:mt-0">
                 {/* Weather Widget */}
-                <WeatherWidget 
-                  lat={monastery.latitude}
-                  lon={monastery.longitude}
-                  name={monastery.name}
-                />
+                <div className="mt-2">
+                  <WeatherWidget 
+                    lat={monastery.latitude}
+                    lon={monastery.longitude}
+                    name={monastery.name}
+                  />
+                </div>
 
                 {/* Audio Guides */}
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm">Audio Guides</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    {Object.entries(monastery.audio).map(([lang, src]) => (
-                      <AudioPlayer 
-                        key={lang}
-                        src={src} 
-                        language={languageNames[lang as keyof typeof languageNames]?.name || lang}
-                        nativeLanguage={languageNames[lang as keyof typeof languageNames]?.native || lang}
-                      />
-                    ))}
-                  </CardContent>
-                </Card>
+                <AudioGuides audioFiles={monastery.audio} />
               </div>
             </div>
           </div>
