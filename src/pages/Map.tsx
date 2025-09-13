@@ -3,16 +3,19 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Filter } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { MapPin, Filter, Navigation } from 'lucide-react';
 import { monasteries, getMonasteriesByDistrict } from '@/data/monasteries';
 import { Layout } from '@/components/Layout';
 import { RealSikkimMap } from '@/components/RealSikkimMap';
+import { useLocation } from '@/hooks/useLocation';
 
 const districts = ['All', 'East', 'South', 'West', 'North'] as const;
 
 export default function Map() {
   const [selectedDistrict, setSelectedDistrict] = useState<string>('All');
   const [selectedMonastery, setSelectedMonastery] = useState<any>(null);
+  const { location, error, loading, requestLocation, clearLocation } = useLocation();
 
   const filteredMonasteries = selectedDistrict === 'All' 
     ? monasteries 
@@ -30,6 +33,59 @@ export default function Map() {
               Explore the sacred monasteries across Sikkim's four districts. Interact with the real map
               to discover these ancient centers of Buddhist wisdom nestled in the Himalayas.
             </p>
+            
+            {/* Location Button */}
+            <div className="mt-6 flex justify-center gap-3">
+              <Button
+                onClick={requestLocation}
+                disabled={loading}
+                variant="outline"
+                className="flex items-center space-x-2"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
+                    Getting Location...
+                  </>
+                ) : location ? (
+                  <>
+                    <MapPin className="h-4 w-4 text-green-600" />
+                    <span>Location Enabled</span>
+                  </>
+                ) : (
+                  <>
+                    <Navigation className="h-4 w-4" />
+                    <span>Show My Location on Map</span>
+                  </>
+                )}
+              </Button>
+              
+              {location && (
+                <Button
+                  onClick={clearLocation}
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 hover:text-red-700"
+                >
+                  Clear Location
+                </Button>
+              )}
+            </div>
+
+            {/* Location Status */}
+            {error && (
+              <Alert className="mt-4 max-w-md mx-auto">
+                <AlertDescription className="text-center">
+                  {error.message}. Enable location access to see your position on the map.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {location && (
+              <div className="mt-4 text-sm text-muted-foreground">
+                📍 Your location will appear as a blue ping on the map below
+              </div>
+            )}
           </div>
 
           {/* District Filter */}
@@ -57,6 +113,7 @@ export default function Map() {
                     <RealSikkimMap 
                       selectedDistrict={selectedDistrict} 
                       onMarkerClick={setSelectedMonastery}
+                      userLocation={location}
                     />
                   </div>
                   <div className="mt-4 p-3 bg-muted/40 rounded-md border border-border/30">
