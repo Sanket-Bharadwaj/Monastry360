@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, MapPin, Calendar, Info, Home, Building2 } from 'lucide-react';
+import { Menu, X, MapPin, Calendar, Info, Home, Building2, Navigation as NavigationIcon } from 'lucide-react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -9,6 +9,7 @@ const navigation = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Map', href: '/map', icon: MapPin },
   { name: 'Monasteries', href: '/monasteries', icon: Building2 },
+  { name: 'Nearby', href: '/nearby', icon: NavigationIcon },
   { name: 'Calendar', href: '/calendar', icon: Calendar },
   { name: 'About', href: '/about', icon: Info },
 ];

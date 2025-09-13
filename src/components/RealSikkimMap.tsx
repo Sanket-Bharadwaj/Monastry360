@@ -15,12 +15,14 @@ interface RealSikkimMapProps {
   selectedDistrict: string;
   onMarkerClick: (monastery: any) => void;
   className?: string;
+  userLocation?: { latitude: number; longitude: number } | null;
 }
 
-export function RealSikkimMap({ selectedDistrict, onMarkerClick, className = "" }: RealSikkimMapProps) {
+export function RealSikkimMap({ selectedDistrict, onMarkerClick, className = "", userLocation }: RealSikkimMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
+  const userMarkerRef = useRef<L.Marker | null>(null);
   
   // State for legend visibility
   const [isLegendVisible, setIsLegendVisible] = useState(true);
@@ -297,6 +299,157 @@ export function RealSikkimMap({ selectedDistrict, onMarkerClick, className = "" 
       mapInstanceRef.current.fitBounds(group.getBounds().pad(0.1));
     }
   }, [selectedDistrict, onMarkerClick]);
+
+  // Handle user location marker
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+
+    // Remove existing user marker
+    if (userMarkerRef.current) {
+      mapInstanceRef.current.removeLayer(userMarkerRef.current);
+      userMarkerRef.current = null;
+    }
+
+    // Add user location marker if location is available
+    if (userLocation) {
+      console.log('Adding user location marker:', userLocation); // Debug log
+      
+      const userLocationIcon = L.divIcon({
+        className: 'user-location-marker',
+        html: `
+          <div style="
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <!-- Pulsing circle animation -->
+            <div class="pulse-outer" style="
+              position: absolute;
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              background: rgba(59, 130, 246, 0.3);
+              animation: pulse-animation 2s infinite;
+            "></div>
+            <div class="pulse-inner" style="
+              position: absolute;
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+              background: rgba(59, 130, 246, 0.5);
+              animation: pulse-animation 2s infinite 0.5s;
+            "></div>
+            <!-- Center dot -->
+            <div style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #3B82F6;
+              border: 3px solid white;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+              z-index: 1000;
+              position: relative;
+            "></div>
+          </div>
+        `,
+        iconSize: [50, 50],
+        iconAnchor: [25, 25],
+        popupAnchor: [0, -25],
+      });
+
+      // Add the CSS animation to the document head if not already added
+      if (!document.getElementById('user-location-styles')) {
+        const style = document.createElement('style');
+        style.id = 'user-location-styles';
+        style.textContent = `
+          @keyframes pulse-animation {
+            0% {
+              transform: scale(0.5);
+              opacity: 1;
+            }
+            100% {
+              transform: scale(1.2);
+              opacity: 0;
+            }
+          }
+          .user-location-marker {
+            z-index: 1000 !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      const userMarker = L.marker([userLocation.latitude, userLocation.longitude], {
+        icon: userLocationIcon,
+        zIndexOffset: 1000, // Ensure it appears above other markers
+      });
+
+      userMarker.bindPopup(`
+        <div style="
+          font-family: 'Crimson Text', serif;
+          text-align: center;
+          max-width: 200px;
+        ">
+          <div style="
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
+            padding: 8px 12px;
+            margin: -8px -12px 8px -12px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 4px 4px 0 0;
+          ">
+            📍 Your Location
+          </div>
+          
+          <div style="padding: 8px 4px;">
+            <p style="
+              font-size: 13px;
+              margin: 4px 0;
+              color: #333;
+              font-weight: 600;
+            ">You are currently here!</p>
+            
+            <div style="
+              font-size: 11px;
+              color: #666;
+              border-top: 1px solid #eee;
+              padding-top: 6px;
+              margin-top: 8px;
+            ">
+              <div>Lat: ${userLocation.latitude.toFixed(6)}</div>
+              <div>Lng: ${userLocation.longitude.toFixed(6)}</div>
+            </div>
+            
+            <div style="
+              margin-top: 8px;
+              padding: 4px 8px;
+              background: rgba(59, 130, 246, 0.1);
+              border-radius: 4px;
+              font-size: 10px;
+              color: #3B82F6;
+              font-weight: 600;
+            ">
+              🌟 Live Location Detected
+            </div>
+          </div>
+        </div>
+      `, {
+        maxWidth: 250,
+        className: 'user-location-popup',
+        closeButton: true,
+        autoClose: false,
+      });
+
+      userMarker.addTo(mapInstanceRef.current);
+      userMarkerRef.current = userMarker;
+
+      console.log('User location marker added successfully'); // Debug log
+    }
+  }, [userLocation]);
 
   return (
     <div className={`relative sikkim-map-container ${className}`}>

@@ -17,6 +17,7 @@ import MonasteryDetail from "./pages/MonasteryDetail";
 import Calendar from "./pages/Calendar";
 import Chat from "./pages/Chat";
 import About from "./pages/About";
+import Nearby from "./pages/Nearby";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => {
               <Route path="/monasteries" element={<Monasteries />} />
               <Route path="/monasteries/:slug" element={<MonasteryDetail />} />
               <Route path="/calendar" element={<Calendar />} />
+              <Route path="/nearby" element={<Nearby />} />
               {/* <Route path="/chat" element={<Chat />} /> */}
               <Route path="/about" element={<About />} />
               {/* Catch-all route for 404 */}

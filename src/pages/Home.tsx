@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Calendar, Wifi, Shield, Globe } from 'lucide-react';
+import { MapPin, Calendar, Wifi, Shield, Globe, Navigation } from 'lucide-react';
 import { monasteries } from '@/data/monasteries';
 import heroImage from '@/assets/hero-sikkim.jpg';
 
@@ -35,9 +35,9 @@ export default function Home() {
               </Link>
             </Button>
             <Button asChild variant="secondary" size="lg" className="bg-card/90 text-card-foreground border-2 border-card-foreground/20 hover:bg-card shadow-lg touch-target">
-              <Link to="/calendar">
-                <Calendar className="mr-2 h-5 w-5" />
-                Cultural Calendar
+              <Link to="/nearby">
+                <Navigation className="mr-2 h-5 w-5" />
+                Find Nearby Places
               </Link>
             </Button>
           </div>
@@ -106,7 +106,7 @@ export default function Home() {
             Why Monastery360?
           </h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             <div className="text-center group shuttle-float">
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-sky/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-sky/20 transition-colors">
                 <Globe className="h-6 w-6 sm:h-8 sm:w-8 text-sky" />
@@ -129,7 +129,18 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="text-center group shuttle-float sm:col-span-2 lg:col-span-1">
+            <div className="text-center group shuttle-float">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-500/20 transition-colors">
+                <Navigation className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500" />
+              </div>
+              <h3 className="text-base sm:text-lg font-semibold mb-2">Smart Recommendations</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Get personalized suggestions for nearby hotels and attractions based on 
+                your current location in Sikkim.
+              </p>
+            </div>
+
+            <div className="text-center group">
               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-gold/20 transition-colors">
                 <Wifi className="h-6 w-6 sm:h-8 sm:w-8 text-gold" />
               </div>
