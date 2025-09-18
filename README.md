@@ -76,8 +76,7 @@ Create `.env` file:
 ```env
 VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 VITE_N8N_WEBHOOK_URL=https://your-n8n-instance.cloud/webhook/your-id/chat
-```
-
+```
 ### Google Cloud Setup
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
